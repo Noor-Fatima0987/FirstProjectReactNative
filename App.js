@@ -23,7 +23,7 @@ const [goalsEntered, setGoalsEntered] = useState([]);
     return(
     <Image
       source={require('./assets/goalImage.jpg')}  
-        style={{ width: 380, height: 200 ,borderRadius:25}}
+        style={{ width: 360, height: 200 ,borderRadius:25}}
    />
     );
     
@@ -31,7 +31,15 @@ const [goalsEntered, setGoalsEntered] = useState([]);
 
    function GoalsList(){
     console.log(goalsEntered);
-
+    return(
+    <View>
+      <Text>{goalsEntered.map((goal,index)=>(
+        <Text key={index}>
+          {goal}
+          </Text>
+      ))}</Text>
+    </View>
+    );
    };
 
 
