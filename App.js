@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import { StyleSheet, Text, View ,Image , TextInput , Button} from 'react-native';
+import { StyleSheet, Text, View ,Image , TextInput ,ScrollView, FlatList, Button} from 'react-native';
 
 
 export default function App() {
@@ -13,10 +13,12 @@ const [goalsEntered, setGoalsEntered] = useState([]);
   };
 
   function GoalHundler(){
-    if (enterText.trim().length === 0) return; 
+   if (enterText.trim().length === 0) return; 
 
-    setGoalsEntered((currentGoals) => [...currentGoals, enterText]); 
-    setEnterText(''); 
+    setGoalsEntered((currentGoals) => [...currentGoals, {text: enterText, id:Math.random().toString()}]); 
+    setEnterText('');
+    
+    
    
   };
    function  GoalImage(){
@@ -29,18 +31,7 @@ const [goalsEntered, setGoalsEntered] = useState([]);
     
    };
 
-   function GoalsList(){
-    console.log(goalsEntered);
-    return(
-    <View>
-      <Text>{goalsEntered.map((goal,index)=>(
-        <Text key={index}>
-          {goal}
-          </Text>
-      ))}</Text>
-    </View>
-    );
-   };
+   
 
 
   return (
@@ -53,17 +44,31 @@ const [goalsEntered, setGoalsEntered] = useState([]);
         <TextInput  style={styles.InputContainer}
         placeholder='enter your goals:' 
         onChangeText={InputHandler}
-        value={enterText}   
+        value={enterText}
+           
         />
-        <Button 
+        <Button style={styles.button}
         title="Add Goals"
         onPress={GoalHundler}
          />
       </View>
-      <View style={styles.goalsContainer}>
-        <Button  title="Your goals list .."
-        onPress={GoalsList}
-        />
+      <View style={styles.goalstyles}>
+      <FlatList data={goalsEntered} renderItem={(Dataitem)=>{
+        return(
+           <View   style={styles.goalsContainer}>
+            <Text style={styles.goalsTextContainer}> {Dataitem.item.text} </Text>
+            </View >
+          );
+       
+      }}
+      keyExtractor={(item,index)=>{
+        return item.id;
+      }}
+      alwaysBounceVertical={false}/>
+         
+          
+           
+    
       </View>
     </View>
   );
@@ -107,7 +112,21 @@ const styles = StyleSheet.create({
 
   },
   goalsContainer:{
+    margin:8,
+    padding: 8,
+    backgroundColor:'#1b9cf7',
+    borderRadius:18,
 
   },
+  goalsTextContainer:{
+  color: 'white'
+
+  },
+  button:{
+    borderRadius:18,
+  },
+  goalstyles:{
+    flex:5,
+  }
 });
  
