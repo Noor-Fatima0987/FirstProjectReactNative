@@ -1,27 +1,24 @@
 import {useState} from 'react';
-import { StyleSheet, Text, View ,Image , TextInput ,ScrollView, FlatList, Button} from 'react-native';
+import { StyleSheet, View ,Image , TextInput , Button, FlatList} from 'react-native';
+import GoalItem from './components/GoalItem'
+import GoalInput from './components/GoalInput'
 
 
 export default function App() {
-const [enterText , setEnterText] = useState ('');
+
 const [goalsEntered, setGoalsEntered] = useState([]);
 
 
-  function InputHandler(text){
-    setEnterText(text);
+  
+
+  function GoalHundler(enterText ){
+    if (enterText.trim().length === 0) return; 
+
+    setGoalsEntered((currentGoals) => [...currentGoals, {text:enterText , id: Math.random().toString()}]); 
+   
    
   };
-
-  function GoalHundler(){
-   if (enterText.trim().length === 0) return; 
-
-    setGoalsEntered((currentGoals) => [...currentGoals, {text: enterText, id:Math.random().toString()}]); 
-    setEnterText('');
-    
-    
-   
-  };
-   function  GoalImage(){
+  function  GoalImage(){
     return(
     <Image
       source={require('./assets/goalImage.jpg')}  
@@ -39,36 +36,16 @@ const [goalsEntered, setGoalsEntered] = useState([]);
       <View style={styles.ImageContainer}>
          <GoalImage />
          </View>    
-      <View style={styles.ButtonContainer}>
-       
-        <TextInput  style={styles.InputContainer}
-        placeholder='enter your goals:' 
-        onChangeText={InputHandler}
-        value={enterText}
-           
-        />
-        <Button style={styles.button}
-        title="Add Goals"
-        onPress={GoalHundler}
-         />
-      </View>
-      <View style={styles.goalstyles}>
-      <FlatList data={goalsEntered} renderItem={(Dataitem)=>{
-        return(
-           <View   style={styles.goalsContainer}>
-            <Text style={styles.goalsTextContainer}> {Dataitem.item.text} </Text>
-            </View >
-          );
-       
-      }}
-      keyExtractor={(item,index)=>{
-        return item.id;
-      }}
-      alwaysBounceVertical={false}/>
-         
-          
-           
-    
+      <GoalInput onAddGoal={GoalHundler}/>
+      <View style={styles.goalsContainer}>
+        <FlatList
+        data={goalsEntered}
+        renderItem={(dataItem)=>{
+          return <GoalItem text={dataItem.item.text}/>;
+        }}
+        keyExtractor={(index,item)=>{
+          return item.id;
+        }}/>
       </View>
     </View>
   );
@@ -83,25 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor:'lightblue',
   },
 
-  ButtonContainer: {
-   flexDirection:'row',
-   justifyCenter:'space-between',
-   paddingBottom:10 ,
-   alignItems:'center',
-   
-   
-  },
-
-  InputContainer:{
-    flex:2,
-    borderWidth:2,
-    borderColor: '#1b9cf7',
-    padding: 10,
-    marginRight:8,
-    marginBottom:2,
-    borderRadius:18,
-  
-  },
+ 
   ImageContainer:{
     marginBottom:15,
     
@@ -112,21 +71,8 @@ const styles = StyleSheet.create({
 
   },
   goalsContainer:{
-    margin:8,
-    padding: 8,
-    backgroundColor:'#1b9cf7',
-    borderRadius:18,
-
+  flex:5,
   },
-  goalsTextContainer:{
-  color: 'white'
-
-  },
-  button:{
-    borderRadius:18,
-  },
-  goalstyles:{
-    flex:5,
-  }
+  
 });
  
