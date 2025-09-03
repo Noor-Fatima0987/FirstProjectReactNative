@@ -1,25 +1,24 @@
 import {useState} from 'react';
-import { StyleSheet, Text, View ,Image , TextInput , Button} from 'react-native';
+import { StyleSheet, View ,Image , TextInput , Button, FlatList} from 'react-native';
+import GoalItem from './components/GoalItem'
+import GoalInput from './components/GoalInput'
 
 
 export default function App() {
-const [enterText , setEnterText] = useState ('');
+
 const [goalsEntered, setGoalsEntered] = useState([]);
 
 
-  function InputHandler(text){
-    setEnterText(text);
-   
-  };
+  
 
-  function GoalHundler(){
+  function GoalHundler(enterText ){
     if (enterText.trim().length === 0) return; 
 
-    setGoalsEntered((currentGoals) => [...currentGoals, enterText]); 
-    setEnterText(''); 
+    setGoalsEntered((currentGoals) => [...currentGoals, {text:enterText , id: Math.random().toString()}]); 
+   
    
   };
-   function  GoalImage(){
+  function  GoalImage(){
     return(
     <Image
       source={require('./assets/goalImage.jpg')}  
@@ -29,18 +28,7 @@ const [goalsEntered, setGoalsEntered] = useState([]);
     
    };
 
-   function GoalsList(){
-    console.log(goalsEntered);
-    return(
-    <View>
-      <Text>{goalsEntered.map((goal,index)=>(
-        <Text key={index}>
-          {goal}
-          </Text>
-      ))}</Text>
-    </View>
-    );
-   };
+   
 
 
   return (
@@ -48,22 +36,16 @@ const [goalsEntered, setGoalsEntered] = useState([]);
       <View style={styles.ImageContainer}>
          <GoalImage />
          </View>    
-      <View style={styles.ButtonContainer}>
-       
-        <TextInput  style={styles.InputContainer}
-        placeholder='enter your goals:' 
-        onChangeText={InputHandler}
-        value={enterText}   
-        />
-        <Button 
-        title="Add Goals"
-        onPress={GoalHundler}
-         />
-      </View>
+      <GoalInput onAddGoal={GoalHundler}/>
       <View style={styles.goalsContainer}>
-        <Button  title="Your goals list .."
-        onPress={GoalsList}
-        />
+        <FlatList
+        data={goalsEntered}
+        renderItem={(dataItem)=>{
+          return <GoalItem text={dataItem.item.text}/>;
+        }}
+        keyExtractor={(index,item)=>{
+          return item.id;
+        }}/>
       </View>
     </View>
   );
@@ -78,25 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor:'lightblue',
   },
 
-  ButtonContainer: {
-   flexDirection:'row',
-   justifyCenter:'space-between',
-   paddingBottom:10 ,
-   alignItems:'center',
-   
-   
-  },
-
-  InputContainer:{
-    flex:2,
-    borderWidth:2,
-    borderColor: '#1b9cf7',
-    padding: 10,
-    marginRight:8,
-    marginBottom:2,
-    borderRadius:18,
-  
-  },
+ 
   ImageContainer:{
     marginBottom:15,
     
@@ -107,7 +71,8 @@ const styles = StyleSheet.create({
 
   },
   goalsContainer:{
-
+  flex:5,
   },
+  
 });
  
