@@ -13,7 +13,7 @@ const [goalsEntered, setGoalsEntered] = useState([]);
   }
 
   function CrossModel(){
-      setModalVisible(false);
+    setModalVisible(false);
   };
 
   function  GoalImage(){
